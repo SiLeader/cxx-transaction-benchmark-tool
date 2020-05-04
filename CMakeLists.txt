@@ -7,6 +7,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
 
 add_subdirectory(third_party/yaml-cpp)
 
-add_executable(${PROJECT_NAME} main.cpp configuration.hpp configuration.cc template_engine.hpp template_engine.cc executor.hpp statistics.hpp database/stdout.hpp)
+add_executable(${PROJECT_NAME} src/main.cpp src/configuration.hpp src/configuration.cc src/template_engine.hpp src/template_engine.cc src/executor.hpp src/statistics.hpp database/stdout.hpp)
 target_link_libraries(${PROJECT_NAME} yaml-cpp pthread)
 target_include_directories(${PROJECT_NAME} PRIVATE third_party/yaml-cpp/include)

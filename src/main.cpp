@@ -1,7 +1,7 @@
 #include <iostream>
 
+#include "../database/stdout.hpp"
 #include "configuration.hpp"
-#include "database/stdout.hpp"
 #include "executor.hpp"
 
 int main() {

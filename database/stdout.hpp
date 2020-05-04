@@ -7,7 +7,7 @@
 #include <iostream>
 #include <string_view>
 
-#include "../executor.hpp"
+#include "../src/executor.hpp"
 
 namespace tb::database {
 
