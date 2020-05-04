@@ -1,0 +1,7 @@
+name: test
+threads: 16
+count: 1000
+
+transaction:
+  queries:
+    - UPDATE database.table SET pk = '{{ random_string(16) }}', field1 = {{ random_number() }}, field2 = {{ random_number(10) }}, field3 = {{ random_number(5, 15) }}
