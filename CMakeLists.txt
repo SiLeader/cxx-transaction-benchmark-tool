@@ -7,6 +7,10 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wold-style-cast")
 
 add_subdirectory(third_party/yaml-cpp)
 
+if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/database/notrack/CMakeLists.txt)
+    add_subdirectory(database/notrack)
+endif ()
+
 add_executable(${PROJECT_NAME}
         src/main.cpp
         include/configuration.hpp
@@ -17,10 +21,16 @@ add_executable(${PROJECT_NAME}
         include/statistics.hpp
         database/stdout.hpp
         database/mysql.hpp
-        include/properties.hpp database/notrack/cassandra.hpp include/database_creator.hpp include/database.hpp database/notrack/database_creator.hpp)
+        include/properties.hpp
+        include/database_creator.hpp
+        include/database.hpp
+        )
 
 target_link_libraries(${PROJECT_NAME} yaml-cpp pthread mysqlclient)
 target_include_directories(${PROJECT_NAME} PRIVATE third_party/yaml-cpp/include)
 target_include_directories(${PROJECT_NAME} PRIVATE third_party/argparse)
 target_include_directories(${PROJECT_NAME} PRIVATE include)
 target_include_directories(${PROJECT_NAME} PRIVATE database)
+if (TARGET notrack-database)
+    target_link_libraries(${PROJECT_NAME} notrack-database)
+endif ()
