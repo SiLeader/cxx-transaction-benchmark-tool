@@ -5,21 +5,22 @@
 #pragma once
 
 #include <iostream>
+#include <properties.hpp>
 #include <string_view>
 
-#include "../src/executor.hpp"
+#include "database.hpp"
 
 namespace tb::database {
 
-class StdoutTestDatabase {
+class StdoutTestDatabase : public Database {
  public:
-  void execute(std::string_view query) { std::cout << query << std::endl; }
-
-  static StdoutTestDatabase Make() { return StdoutTestDatabase(); }
+  void execute(std::string_view query) override {
+    std::cout << query << std::endl;
+  }
 
  public:
-  static Executor<StdoutTestDatabase> CreateExecutor() {
-    return Executor<StdoutTestDatabase>();
+  static std::unique_ptr<Database> Make(const Properties&) {
+    return std::make_unique<StdoutTestDatabase>();
   }
 };
 

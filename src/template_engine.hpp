@@ -14,11 +14,6 @@ namespace te {
 
 using Id = std::string;
 
-enum class Type {
-  kString,
-  kInt,
-};
-
 inline constexpr std::size_t kNumberIndex = 0, kStringIndex = 1;
 using Value = std::variant<std::int_fast64_t, std::string>;
 

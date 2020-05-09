@@ -35,3 +35,11 @@
 cmake-build-debug/
 cmake-build-release/
 .idea/
+
+# Environment (properties)
+env/*
+!env/.gitignore
+
+# Custom database (do not want to track on Git)
+database/notrack/*
+!database/notrack/.gitignore

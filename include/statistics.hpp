@@ -158,6 +158,7 @@ class Statistics {
     const auto error_median = median<kErrorIndex>();
     const auto whole_median = median();
 
+    os << std::dec;
     os << "name: " << name() << "\n"
        << "threads: " << threadCount() << "\n"
        << "count:\n"

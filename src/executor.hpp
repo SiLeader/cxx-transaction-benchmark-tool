@@ -6,25 +6,25 @@
 
 #include <atomic>
 #include <chrono>
+#include <configuration.hpp>
+#include <database.hpp>
 #include <future>
+#include <properties.hpp>
 #include <shared_mutex>
+#include <statistics.hpp>
 #include <tuple>
 #include <vector>
 
-#include "configuration.hpp"
-#include "statistics.hpp"
-
 #define tb_likely(x) __builtin_expect(!!(x), 1)
-#define tb_unlikely(x) __builtin_expect(!!(x), 0)
 
 namespace tb {
 
-template <class Database, class... Args>
 class Executor {
  private:
-  std::tuple<Args...> args_;
   std::shared_mutex shared_mutex_;
   std::atomic<std::size_t> thread_counter_;
+  std::function<std::unique_ptr<database::Database>(const Properties&)>
+      create_database_;
 
  private:
   class InternalStat {
@@ -74,23 +74,34 @@ class Executor {
     }
 
    public:
-    Statistics::ElapsedTImesPerThreadType toStatisticsElement() const {
+    [[nodiscard]] Statistics::ElapsedTImesPerThreadType toStatisticsElement()
+        const {
       return {elapsed_times_, error_elapsed_times_};
     }
   };
 
  public:
-  explicit Executor(std::tuple<Args...> args)
-      : args_(std::move(args)), thread_counter_(0) {}
-  explicit Executor(Args... args) : Executor(std::tuple{args...}) {}
+  template <class F>
+  explicit Executor(F&& f)
+      : thread_counter_(0), create_database_(std::forward<F>(f)) {}
 
  public:
-  Database create() { return std::apply(Database::Make, args_); }
+  [[nodiscard]] std::unique_ptr<database::Database> create(
+      const Properties& props) const {
+    return create_database_(props);
+  }
 
  private:
-  InternalStat executeImpl(const tb::Configuration& config) {
+  InternalStat executeImpl(const tb::Configuration& config,
+                           const Properties& props) {
     auto transactions = config.createQueries();
-    auto db = create();
+    std::unique_ptr<database::Database> db;
+    try {
+      db = create(props);
+    } catch (const std::exception& e) {
+      std::cerr << "error: " << e.what() << std::endl;
+      return InternalStat();
+    }
     InternalStat stat(config.count());
 
     thread_counter_++;
@@ -104,7 +115,7 @@ class Executor {
 
       try {
         for (const auto& query : queries) {
-          db.execute(query);
+          db->execute(query);
         }
       } catch (...) {
         is_success = false;
@@ -119,7 +130,7 @@ class Executor {
   }
 
  public:
-  Statistics execute(const Configuration& config) {
+  Statistics execute(const Configuration& config, const Properties& props) {
     thread_counter_ = 0;
 
     std::vector<std::future<InternalStat>> stat_futures;
@@ -128,8 +139,8 @@ class Executor {
     shared_mutex_.lock();
 
     for (std::size_t i = 0; i < config.threadCount(); ++i) {
-      stat_futures.emplace_back(
-          std::async(std::launch::async, [&] { return executeImpl(config); }));
+      stat_futures.emplace_back(std::async(
+          std::launch::async, [&] { return executeImpl(config, props); }));
     }
 
     while (thread_counter_ < config.threadCount()) {
@@ -150,11 +161,5 @@ class Executor {
     return Statistics(config.name(), config.threadCount(), etpts);
   }
 };
-
-template <class... Args>
-Executor(Args...) -> Executor<Args...>;
-
-template <class... Args>
-Executor(std::tuple<Args...>) -> Executor<Args...>;
 
 }  // namespace tb
