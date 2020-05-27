@@ -29,6 +29,8 @@ int main(const int argc, const char* const* const argv) {
   parser.addArgument({"--result", "-r"}, "result output (default: stdout)");
   parser.addArgument({"--properties", "-p"}, "properties file");
   parser.addArgument({"--database", "--db", "-d"}, "database name");
+  parser.addArgument({"--histogram"}, "success histogram output file");
+  parser.addArgument({"--histogram-width"}, "histogram rank width");
 
   const auto args = parser.parseArgs(argc, argv);
 
@@ -63,6 +65,14 @@ int main(const int argc, const char* const* const argv) {
     } else {
       result.dump(std::cout);
     }
+
+    std::string histogram_output_file;
+    if (args.get("histogram", histogram_output_file)) {
+      auto rank_width = args.safeGet<std::size_t>("histogram-width", 100);
+      std::ofstream fout(histogram_output_file);
+      result.dumpHistogram(rank_width, fout);
+    }
+
   } catch (const std::exception& e) {
     std::cerr << "error: " << e.what() << std::endl;
   }

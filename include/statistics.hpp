@@ -198,6 +198,69 @@ class Statistics {
     dump(ss);
     return ss.str();
   }
+
+  using Histogram =
+      std::vector<std::tuple<std::chrono::microseconds, std::size_t>>;
+
+  void dumpHistogram(std::size_t rank_margin, std::ostream& os) const {
+    auto success_histogram = histogram<kSuccessIndex>(rank_margin);
+
+    os << "elapsed time(us),count\n";
+    for (const auto& h : success_histogram) {
+      os << std::get<0>(h).count() << "," << std::get<1>(h) << "\n";
+    }
+  }
+
+  void dumpAllElapsed(std::ostream& os) {}
+
+ private:
+  template <std::size_t Which>
+  static Histogram CreateHistogramImpl(
+      std::size_t rank_margin,
+      const std::vector<ElapsedTImesPerThreadType>& ept,
+      std::chrono::microseconds min, std::chrono::microseconds max) {
+    std::map<std::chrono::microseconds, std::size_t> counter;
+
+    const auto toRank = [rank_margin](const std::chrono::microseconds& us) {
+      return std::chrono::microseconds((us.count() / rank_margin) *
+                                       rank_margin);
+    };
+
+    min = toRank(min);
+    max = toRank(max);
+
+    for (std::chrono::microseconds cv = min; cv < max;
+         cv += std::chrono::microseconds(rank_margin)) {
+      counter[cv] = 0;
+    }
+
+    for (const auto& ee : ept) {
+      for (const auto& e : std::get<Which>(ee)) {
+        counter[toRank(e)]++;
+      }
+    }
+
+    Histogram hist(std::size(counter));
+    std::transform(
+        std::begin(counter), std::end(counter), std::begin(hist),
+        [](const std::pair<std::chrono::microseconds, std::size_t>& c) {
+          return c;
+        });
+
+    using E = decltype(hist)::value_type;
+    std::sort(std::begin(hist), std::end(hist), [](const E& l, const E& r) {
+      return std::get<0>(l) < std::get<0>(r);
+    });
+
+    return hist;
+  }
+
+ public:
+  template <std::size_t Which>
+  [[nodiscard]] Histogram histogram(std::size_t rank_margin) const {
+    return CreateHistogramImpl<Which>(rank_margin, elapsed_times_, min<Which>(),
+                                      max<Which>());
+  }
 };
 
 }  // namespace tb
