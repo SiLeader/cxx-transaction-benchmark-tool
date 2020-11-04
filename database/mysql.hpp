@@ -22,7 +22,8 @@ class MySQL : public Database {
 
  public:
   MySQL() = default;
-  MySQL(const std::string& host, std::uint16_t port, const std::string& user,
+  MySQL(const std::string& host, std::uint16_t port,
+        const std::string& database, const std::string& user,
         const std::string& password)
       : connection_(std::make_unique<MYSQL>()) {
     static std::mutex mtx;
@@ -33,9 +34,9 @@ class MySQL : public Database {
 
     using namespace std::string_literals;
 
-    const auto con =
-        mysql_real_connect(connection_.get(), host.c_str(), user.c_str(),
-                           password.c_str(), nullptr, port, nullptr, 0);
+    const auto con = mysql_real_connect(connection_.get(), host.c_str(),
+                                        user.c_str(), password.c_str(),
+                                        database.c_str(), port, nullptr, 0);
     if (con == nullptr) {
       const auto message =
           "MySQL connect error: "s + mysql_error(connection_.get());
@@ -46,7 +47,7 @@ class MySQL : public Database {
 
   explicit MySQL(const Properties& props)
       : MySQL(props.getProperty("host", "localhost"), props.get<int>("port", 0),
-              props.getProperty("user", ""),
+              props.getProperty("database", ""), props.getProperty("user", ""),
               props.getProperty("password", "")) {}
 
   MySQL(const MySQL&) = delete;

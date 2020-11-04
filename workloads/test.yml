@@ -4,13 +4,13 @@ count: 1000
 
 transaction:
   queries:
-    - INSERT INTO txbench.bench(pk, field1, field2, field3) VALUES ('{{ random_string(32) }}', {{ random_number(0, 500000) }}, {{ random_number(0, 100000000) }}, {{ random_number(5, 150000) }})
-    - INSERT INTO txbench.bench(pk, field1, field2, field3) VALUES ('{{ random_string(32) }}', {{ random_number(0, 500000) }}, {{ random_number(0, 100000000) }}, {{ random_number(5, 150000) }})
-    - INSERT INTO txbench.bench(pk, field1, field2, field3) VALUES ('{{ random_string(32) }}', {{ random_number(0, 500000) }}, {{ random_number(0, 100000000) }}, {{ random_number(5, 150000) }})
-    - INSERT INTO txbench.bench(pk, field1, field2, field3) VALUES ('{{ random_string(32) }}', {{ random_number(0, 500000) }}, {{ random_number(0, 100000000) }}, {{ random_number(5, 150000) }})
-    - INSERT INTO txbench.bench(pk, field1, field2, field3) VALUES ('{{ random_string(32) }}', {{ random_number(0, 500000) }}, {{ random_number(0, 100000000) }}, {{ random_number(5, 150000) }})
-    - INSERT INTO txbench.bench(pk, field1, field2, field3) VALUES ('{{ random_string(32) }}', {{ random_number(0, 500000) }}, {{ random_number(0, 100000000) }}, {{ random_number(5, 150000) }})
-    - INSERT INTO txbench.bench(pk, field1, field2, field3) VALUES ('{{ random_string(32) }}', {{ random_number(0, 500000) }}, {{ random_number(0, 100000000) }}, {{ random_number(5, 150000) }})
-    - INSERT INTO txbench.bench(pk, field1, field2, field3) VALUES ('{{ random_string(32) }}', {{ random_number(0, 500000) }}, {{ random_number(0, 100000000) }}, {{ random_number(5, 150000) }})
-    - INSERT INTO txbench.bench(pk, field1, field2, field3) VALUES ('{{ random_string(32) }}', {{ random_number(0, 500000) }}, {{ random_number(0, 100000000) }}, {{ random_number(5, 150000) }})
-    - INSERT INTO txbench.bench(pk, field1, field2, field3) VALUES ('{{ random_string(32) }}', {{ random_number(0, 500000) }}, {{ random_number(0, 100000000) }}, {{ random_number(5, 150000) }})
+    - INSERT INTO bench(pk, field1, field2, field3) VALUES ('{{ random_string(32) }}', {{ random_number(0, 500000) }}, {{ random_number(0, 100000000) }}, {{ random_number(5, 150000) }})
+    - INSERT INTO bench(pk, field1, field2, field3) VALUES ('{{ random_string(32) }}', {{ random_number(0, 500000) }}, {{ random_number(0, 100000000) }}, {{ random_number(5, 150000) }})
+    - INSERT INTO bench(pk, field1, field2, field3) VALUES ('{{ random_string(32) }}', {{ random_number(0, 500000) }}, {{ random_number(0, 100000000) }}, {{ random_number(5, 150000) }})
+    - INSERT INTO bench(pk, field1, field2, field3) VALUES ('{{ random_string(32) }}', {{ random_number(0, 500000) }}, {{ random_number(0, 100000000) }}, {{ random_number(5, 150000) }})
+    - INSERT INTO bench(pk, field1, field2, field3) VALUES ('{{ random_string(32) }}', {{ random_number(0, 500000) }}, {{ random_number(0, 100000000) }}, {{ random_number(5, 150000) }})
+    - INSERT INTO bench(pk, field1, field2, field3) VALUES ('{{ random_string(32) }}', {{ random_number(0, 500000) }}, {{ random_number(0, 100000000) }}, {{ random_number(5, 150000) }})
+    - INSERT INTO bench(pk, field1, field2, field3) VALUES ('{{ random_string(32) }}', {{ random_number(0, 500000) }}, {{ random_number(0, 100000000) }}, {{ random_number(5, 150000) }})
+    - INSERT INTO bench(pk, field1, field2, field3) VALUES ('{{ random_string(32) }}', {{ random_number(0, 500000) }}, {{ random_number(0, 100000000) }}, {{ random_number(5, 150000) }})
+    - INSERT INTO bench(pk, field1, field2, field3) VALUES ('{{ random_string(32) }}', {{ random_number(0, 500000) }}, {{ random_number(0, 100000000) }}, {{ random_number(5, 150000) }})
+    - INSERT INTO bench(pk, field1, field2, field3) VALUES ('{{ random_string(32) }}', {{ random_number(0, 500000) }}, {{ random_number(0, 100000000) }}, {{ random_number(5, 150000) }})

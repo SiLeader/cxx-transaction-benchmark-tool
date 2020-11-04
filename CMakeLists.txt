@@ -24,9 +24,9 @@ add_executable(${PROJECT_NAME}
         include/properties.hpp
         include/database_creator.hpp
         include/database.hpp
-        )
+        database/prestgresql.hpp)
 
-target_link_libraries(${PROJECT_NAME} yaml-cpp pthread mysqlclient)
+target_link_libraries(${PROJECT_NAME} yaml-cpp pthread mysqlclient pq)
 target_include_directories(${PROJECT_NAME} PRIVATE third_party/yaml-cpp/include)
 target_include_directories(${PROJECT_NAME} PRIVATE third_party/argparse)
 target_include_directories(${PROJECT_NAME} PRIVATE include)

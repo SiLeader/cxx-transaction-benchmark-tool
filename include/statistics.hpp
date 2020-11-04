@@ -169,7 +169,6 @@ class Statistics {
        << "  unit: us\n"
        // average
        << "  average:\n"
-
        << "    whole: " << whole_average.count() << "\n"
        << "    success: " << success_average.count() << "\n"
        << "    error: " << error_average.count()

@@ -6,6 +6,7 @@
 
 #include <functional>
 #include <memory>
+#include <prestgresql.hpp>
 #include <string>
 
 #include "properties.hpp"
@@ -40,6 +41,8 @@ GetDatabaseCreator(const std::string& name) {
     return [](const Properties& p) { return StdoutTestDatabase::Make(p); };
   } else if (name == "mysql") {
     return [](const Properties& p) { return MySQL::Make(p); };
+  } else if (name == "postgresql") {
+    return [](const Properties& p) { return PostgreSQL::Make(p); };
   }
   const auto func = GetNoTrackDatabaseCreator(name);
   if (func) {
