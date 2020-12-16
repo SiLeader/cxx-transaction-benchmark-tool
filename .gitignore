@@ -43,3 +43,9 @@ env/*
 # Custom database (do not want to track on Git)
 database/notrack/*
 !database/notrack/.gitignore
+
+# conan
+conanbuildinfo.cmake
+conanbuildinfo.txt
+conaninfo.txt
+graph_info.json

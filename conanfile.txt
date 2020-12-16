@@ -1,0 +1,7 @@
+[requires]
+libpq/13.1
+cassandra-cpp-driver/2.15.3
+libmysqlclient/8.0.17
+
+[generators]
+cmake

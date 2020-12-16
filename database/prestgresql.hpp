@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <postgresql/libpq-fe.h>
+#include <libpq-fe.h>
 
 #include <database.hpp>
 #include <memory>

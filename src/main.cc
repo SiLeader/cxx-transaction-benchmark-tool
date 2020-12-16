@@ -31,6 +31,12 @@ int main(const int argc, const char* const* const argv) {
   parser.addArgument({"--database", "--db", "-d"}, "database name");
   parser.addArgument({"--histogram"}, "success histogram output file");
   parser.addArgument({"--histogram-width"}, "histogram rank width");
+  parser.addArgument({"--begin"},
+                     "query for begin transaction (default: BEGIN)");
+  parser.addArgument({"--commit"},
+                     "query for commit transaction (default: COMMIT)");
+  parser.addArgument({"--no-transaction"}, "disable transaction",
+                     argparse::ArgumentType::StoreTrue);
 
   const auto args = parser.parseArgs(argc, argv);
 
@@ -48,7 +54,11 @@ int main(const int argc, const char* const* const argv) {
     }
   }
 
-  const auto config = tb::Configuration::Make(workload);
+  const auto begin_query = args.safeGet<std::string>("begin", "BEGIN");
+  const auto commit_query = args.safeGet<std::string>("commit", "COMMIT");
+
+  const auto config = tb::Configuration::Make(
+      begin_query, commit_query, workload, !args.has("no-transaction"));
 
   std::string database;
   if (!args.get("database", database)) {

@@ -17,19 +17,26 @@ namespace tb {
 class Configuration {
  private:
   std::string name_;
+  std::string begin_, commit_;
   std::vector<std::string> queries_;
   std::size_t count_, thread_count_;
+  bool enable_transaction_;
 
  private:
-  Configuration(std::string name, std::vector<std::string> queries,
-                std::size_t count, std::size_t thread_count)
+  Configuration(std::string name, std::string begin, std::string commit,
+                std::vector<std::string> queries, std::size_t count,
+                std::size_t thread_count, bool enable_transaction)
       : name_(std::move(name)),
+        begin_(std::move(begin)),
+        commit_(std::move(commit)),
         queries_(std::move(queries)),
         count_(count),
-        thread_count_(thread_count) {}
+        thread_count_(thread_count),
+        enable_transaction_(enable_transaction) {}
 
  public:
-  static Configuration Make(std::istream& is) {
+  static Configuration Make(std::string begin, std::string commit,
+                            std::istream& is, bool enable_transaction = true) {
     auto config = YAML::Load(is);
     if (config.IsNull()) {
       throw std::runtime_error("configuration file cannot be read");
@@ -52,16 +59,19 @@ class Configuration {
       queries.emplace_back(query_node.as<std::string>());
     }
 
-    return Configuration(std::move(name), std::move(queries), count,
-                         thread_count);
+    return Configuration(std::move(name), std::move(begin), std::move(commit),
+                         std::move(queries), count, thread_count,
+                         enable_transaction);
   }
 
-  static Configuration Make(const std::string& config_file) {
+  static Configuration Make(std::string begin, std::string commit,
+                            const std::string& config_file,
+                            bool enable_transaction = true) {
     std::ifstream fin(config_file);
     if (!fin) {
       throw std::runtime_error("cannot open configuration file");
     }
-    return Make(fin);
+    return Make(std::move(begin), std::move(commit), fin, enable_transaction);
   }
 
  public:
@@ -89,12 +99,15 @@ class Configuration {
       std::vector<std::string> queries_each_transaction;
       queries_each_transaction.reserve(2 + std::size(original_queries));
 
-      queries_each_transaction.emplace_back("BEGIN");
+      if (enable_transaction_) {
+        queries_each_transaction.emplace_back(begin_);
+      }
       for (const auto& query : original_queries) {
         queries_each_transaction.emplace_back(CreateString(query));
       }
-      queries_each_transaction.emplace_back("COMMIT");
-
+      if (enable_transaction_) {
+        queries_each_transaction.emplace_back(commit_);
+      }
       whole_queries.emplace_back(queries_each_transaction);
     }
 
