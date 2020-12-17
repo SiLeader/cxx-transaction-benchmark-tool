@@ -6,14 +6,15 @@
 
 #include <functional>
 #include <memory>
-#include <postgresql.hpp>
 #include <string>
 
 #include "properties.hpp"
 
 // provided databases
 #include "mysql.hpp"
+#include "postgresql.hpp"
 #include "stdout.hpp"
+#include "yugabytedb.hpp"
 
 #if __has_include(<notrack/database_creator.hpp>)
 
@@ -43,6 +44,8 @@ GetDatabaseCreator(const std::string& name) {
     return [](const Properties& p) { return MySQL::Make(p); };
   } else if (name == "postgresql") {
     return [](const Properties& p) { return PostgreSQL::Make(p); };
+  } else if (name == "yugabytedb") {
+    return [](const Properties& p) { return YugabyteDB::Make(p); };
   }
   const auto func = GetNoTrackDatabaseCreator(name);
   if (func) {

@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <mysql/mysql.h>
+#include <mysql.h>
 
 #include <memory>
 #include <mutex>

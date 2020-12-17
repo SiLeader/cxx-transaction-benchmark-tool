@@ -7,7 +7,11 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wold-style-cast")
 
 add_subdirectory(third_party/yaml-cpp)
 
-include(${CMAKE_CURRENT_SOURCE_DIR}/conanbuildinfo.cmake)
+if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/conanbuildinfo.cmake)
+    include(${CMAKE_CURRENT_SOURCE_DIR}/conanbuildinfo.cmake)
+else()
+    message("please run 'conan install conanfile.txt'")
+endif()
 conan_basic_setup()
 
 if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/database/notrack/CMakeLists.txt)
