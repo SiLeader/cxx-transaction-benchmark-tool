@@ -27,7 +27,7 @@ add_executable(${PROJECT_NAME}
         include/properties.hpp
         include/database_creator.hpp
         include/database.hpp
-        database/prestgresql.hpp database/yugabytedb.hpp)
+        database/postgresql.hpp database/yugabytedb.hpp)
 
 target_link_libraries(${PROJECT_NAME} yaml-cpp pthread ${CONAN_LIBS})
 target_include_directories(${PROJECT_NAME} PRIVATE ${CONAN_INCLUDE_DIRS})
