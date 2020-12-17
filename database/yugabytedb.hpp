@@ -46,8 +46,13 @@ class YugabyteDB : public Database {
     cass_cluster_set_connection_heartbeat_interval(cluster_.get(),
                                                    10 * 60 * 60);
 
+    const auto ks_opt = props.getProperty("keyspace");
+    if(!ks_opt) {
+      throw std::invalid_argument("'keyspace' property is required");
+    }
+
     connect_future_ = CASS_SHARED_PTR(
-        future, cass_session_connect(session_.get(), cluster_.get()));
+        future, cass_session_connect_keyspace(session_.get(), cluster_.get(), ks_opt->c_str()));
 
     if (cass_future_error_code(connect_future_.get()) != CASS_OK) {
       throw std::runtime_error("cannot connect to YugabyteDB");
@@ -76,7 +81,6 @@ class YugabyteDB : public Database {
       const auto message =
           "execute failed: code: " + std::to_string(error_code) + ": " +
           cass_error_desc(error_code);
-      std::cout << message << std::endl;
       throw std::runtime_error(message);
     }
   }
