@@ -6,7 +6,7 @@
 
 #include <functional>
 #include <memory>
-#include <prestgresql.hpp>
+#include <postgresql.hpp>
 #include <string>
 
 #include "properties.hpp"
